@@ -43,4 +43,4 @@ If you'd like to use the ReportBuilder for building your own reports, you should
 
 SiteRetriever is an example of a way to retrieve data from a website and output it in a format that ReportBuilder will understand.
 
-timer.py has a useful wrapper for timing tasks. It's almost exactly what the Python Cookbook suggests, but I modified it to add the value to the method's dictionary. Note: this will only work if the method returns a dictionary.
+timer.py has a useful wrapper for timing tasks. It's almost exactly what the Python Cookbook suggests, but I modified it to add the value to the dictionary returned by the method. Note: this will only work if the method returns a dictionary.
