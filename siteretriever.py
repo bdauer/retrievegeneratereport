@@ -30,6 +30,8 @@ class ListingsRetriever:
         """
         Return the number of amazon pages to visit.
 
+        num_sites: the number of sites to retrieve.
+
         Since there are 25 results per page,
         and a user might want a number of results
         that is not a multiple of 25,
@@ -56,8 +58,6 @@ class ListingsRetriever:
             p = s.post(self.LOGIN_URL, data=payload)
             # need to visit a second time to get a successful login.
             p = s.post(self.LOGIN_URL, data=payload)
-            print(p.content)
-
             soupy_listings = []
             for number in range(self.num_pages):
                 page = s.get(self.BASE_URL + str(number))
@@ -71,6 +71,8 @@ class ListingsRetriever:
         """
         Return a list of sites
         equal in number to self.num_sites.
+
+        soupy_listings: a list of site listings strained from the soup.
         """
         sites = []
         for listing in soupy_listings[:self.num_sites]:
@@ -84,35 +86,52 @@ class SiteRetriever:
     """
     Class for retrieving data from a list of sites.
     """
-
     def build_sites_list(self, listings):
         """
         Return a list of site dictionaries.
+
+        listings: a list of websites without their protocols.
         """
         print("Collecting sites data...")
         sites_list = []
         for site in listings:
             print("Collecting {0}'s data...".format(site))
-            sites_list.append(self._build_site_dictionary(site))
-        print("Sites data collected...")
+            page = self._get_page(site)
+            sites_list.append(self._build_site_dictionary(page, site))
+        print("Sites data collected.")
         return sites_list
+
     @timethis
-    def _build_site_dictionary(self, site):
+    def _build_site_dictionary(self, page, site):
         """
         Return a site dictionary.
+
+        page: a response object from a website.
+        site: a url without a protocol.
         """
-        headers, cookies, word_count = self._get_data_from(site)
+        headers, cookies, word_count = self._get_data_from(page)
         return {
             "site_name": site,
             "headers": headers,
             "cookies": cookies,
             "word_count": word_count}
 
-    def _get_data_from(self, site):
+    def _get_data_from(self, page):
         """
-        Return all of the data retrieved from site.
+        Return all of the data retrieved from page.
 
-        site: the url for a website sans protocol.
+        page: A response object from a website.
+        """
+        headers = list(page.headers.keys())
+        cookies = page.cookies.keys()
+        word_count = self._get_wordcount(page)
+        return (headers, cookies, word_count)
+
+    def _get_page(self, site):
+        """
+        Return a response object from the site.
+
+        site: a url without a protocol.
         """
         try:
             url = "http://" + site
@@ -120,15 +139,14 @@ class SiteRetriever:
         except requests.exceptions.SSLError:
             url = "http://www." + site
             page = requests.get(url)
-        headers = list(page.headers.keys())
-        cookies = page.cookies.keys()
-        word_count = self._get_wordcount(page)
+        return page
 
-        return (headers, cookies, word_count)
 
     def _get_wordcount(self, page):
         """
         Return the number of words on a page.
+
+        page: A response object from a website.
         """
         soup = BeautifulSoup(page.text, 'html.parser')
         words = soup.get_text().split()

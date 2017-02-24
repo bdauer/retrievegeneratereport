@@ -1,7 +1,7 @@
 ### Description
 This program collects the names of the top 100 sites on Alexa.
 
-It accesses each od the top 100 sites on Alexa, collecting:
+It accesses each of the top 100 sites on Alexa, collecting:
 * the total word count of the site's landing page,
 * the site's header names and
 * the site's cookie names.
