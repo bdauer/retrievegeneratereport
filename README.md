@@ -15,17 +15,19 @@ It outputs three HTML reports in table format:
 
 ### Instructions
 After downloading the code:
-1.  In your terminal, `cd` into `topsitessummarized`.
+1.  In your terminal, `cd` into `retrievegeneratereport`.
 
-2.  If you'd like to create a virtualenvironment, create one. Make sure to use `-p python3`.
+2.  If you'd like to create a virtualenvironment, create one with `virtualenv -p python3 env`. (Activate it with `source env/bin/activate`).
 
 3.  `pip install -r requirements.txt` will install the requirements.
 
-4.  In your terminal, type `python main.py <email> <password>`, where `email` and `password` are used to access your valid Alexa account. If your default python installation is 2.7, make sure to type `python3` instead of `python`.
+4.  In your terminal, type `python main.py <email> <password>`, where `email` and `password` are used to access your valid Alexa account. If your default python installation is 2.7 and you aren't using a virtual environment, make sure to type `python3` instead of `python`.
 
 5.  You can run the unit tests with `python tests.py`.
 
 While the program runs it will provide feedback on its current status to stdout.
+
+Once it has finished, it will produce the three reports as html files in the same directory.
 
 
 ### Potential Enhancements and Improvements
