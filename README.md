@@ -33,7 +33,8 @@ Once it has finished, it will produce the three reports as html files in the sam
 
 ### Potential Enhancements and Improvements
 * Get better test coverage.
-* find the most common cookie and header names, excluding the most typical headers.
+* Find the most common cookie and header names, excluding the most typical headers.
+* Use a Counter from collections to track header and cookie name frequency. Display a frequency report.
 * Detect the language for each site.
 * Generate a score based on the ratio of words to ranking.
 * Generate a score based on the ratio of ranking to performance.
