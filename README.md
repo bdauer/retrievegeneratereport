@@ -15,6 +15,7 @@ It outputs three HTML reports in table format:
 
 ### Instructions
 After downloading the code:
+
 1.  In your terminal, `cd` into `retrievegeneratereport`.
 
 2.  If you'd like to create a virtualenvironment, create one with `virtualenv -p python3 env`. (Activate it with `source env/bin/activate`).
