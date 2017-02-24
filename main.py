@@ -3,7 +3,7 @@ from reportbuilder import (WordCountReportBuilder, HeaderReportBuilder,
                            PerformanceReportBuilder)
 from timer import timethis
 
-def gather_alexa_data(name, password, builders):
+def gather_alexa_data(name, password):
     """
     Retrieve data for the top 100 sites on Alexa.
 
@@ -24,9 +24,9 @@ def build_reports(alexa_sites_data, builders):
         report_builder = Builder(alexa_sites_data)
         report_builder.create_report()
 
-def main(name, password):
+def main(name, password, builders):
     alexa_data = gather_alexa_data(name, password)
-    build_reports(alexa_data)
+    build_reports(alexa_data, builders)
 
 if __name__ == "__main__":
     import sys
