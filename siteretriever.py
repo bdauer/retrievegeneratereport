@@ -3,6 +3,13 @@ import requests
 from bs4 import BeautifulSoup
 from timer import timethis
 
+
+# Thing that change:
+# base_url, login_url, whether login is needed.
+# how the site is parsed
+# Things that stay the same:
+# need to get listings, and output as a list of sites.
+
 class ListingsRetriever:
     """
     Class for retrieving top listings from Alexa.
@@ -82,6 +89,14 @@ class ListingsRetriever:
             sites.append(scrubbed_site)
         return sites
 
+# things that change:
+# nothing if this is the data we're retrieving.
+# I may want to handle cases where the protocol is included by default though,
+# and add some try-except blocks to handle those cases.
+# Reportbuilder.py should handle any list of dictionaries.
+# This means that an entirely different class could work wth it,
+# e.g. getting data from an API or from a different type of file.
+
 class SiteRetriever:
     """
     Class for retrieving data from a list of sites.
@@ -96,8 +111,13 @@ class SiteRetriever:
         sites_list = []
         for site in listings:
             print("Collecting {0}'s data...".format(site))
-            page = self._get_page(site)
-            sites_list.append(self._build_site_dictionary(page, site))
+            try:
+                page = self._get_page(site)
+                sites_list.append(self._build_site_dictionary(page, site))
+            except requests.exceptions.ConnectionError:
+                print("{0} could not be accessed".format(site))
+                continue
+
         print("Sites data collected.")
         return sites_list
 
