@@ -48,3 +48,10 @@ If you'd like to use the ReportBuilder for building your own reports, you should
 SiteRetriever is an example of a way to retrieve data from a website and output it in a format that ReportBuilder will understand.
 
 timer.py has a useful wrapper for timing tasks. It's almost exactly what the Python Cookbook suggests, but I modified it to add the value to the dictionary returned by the method. Note: this will only work if the method returns a dictionary.
+
+#### Update notes for v0.2
+Still need to improve the documentation, update tests and make a pass to tidy up variable names. Major changes are as follows:
+* New abstract base class: BaseReportBuilder
+* New mixin: NonStandardRowMixin. Use for appending a field that averages or sums a column.
+* Improved extensibility: report format is provided as an argument. Currently only supports html reports.
+* Backwards Compatibility! The boilerplate builder classes now implement the new functionality, reducing the need for a complete rewrite of code that depended on the old builders.
