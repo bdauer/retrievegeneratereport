@@ -17,10 +17,6 @@ class BaseReportBuilder(metaclass=ABCMeta):
     def build_report(self):
         pass
 
-    @abstractmethod
-    def build_table(self):
-        pass
-
 
 # what changes:
 # categories, header, unique rows (linked to categories), report format (html, css etc)
@@ -57,12 +53,31 @@ class ReportBuilder(BaseReportBuilder):
         """
         Create an html report.
         """
-        report = self.build_report()
+        report = self.build_report(file_format)
         filename = "{0}.{1}".format(self.header, file_format)
         with open(filename, "w") as f:
             f.write(report)
 
-    def build_report(self):
+    def build_report(self, file_format):
+        """
+        Build a report in the requested file format.
+
+        file_format: The format to use for the file.
+        Currently supports html.
+
+        This method delegates to a build method appropriate to the provided
+        file_format.
+        """
+
+        if file_format == "html":
+            report = self.build_html_report()
+
+        return report
+
+
+
+
+    def build_html_report(self):
         """
         Return an html report.
         """
@@ -75,11 +90,12 @@ class ReportBuilder(BaseReportBuilder):
         <h2>{0}</h2><br>
         """.format(self.header)
 
-        table = self.build_table()
+        table = self.build_html_table()
         report = "{0}{1}<br><br><br></body>".format(headings, table)
         return report
 
-    def build_table(self):
+
+    def build_html_table(self):
         """
         Return an html table.
 
@@ -87,7 +103,7 @@ class ReportBuilder(BaseReportBuilder):
         are used for data retrieval and table header creation.
         """
         table = ""
-        table_header = self._build_table_header()
+        table_header = self._build_html_table_header()
         table += table_header
         for index, site_dict in enumerate(self.data, 1):
             unfinished_row = self._build_site_row(site_dict)
@@ -96,7 +112,7 @@ class ReportBuilder(BaseReportBuilder):
         table = "<table border=\"1\">{0}</table>".format(table)
         return table
 
-    def _build_table_header(self):
+    def _build_html_table_header(self):
         """
         Return an html table header.
         """
@@ -198,13 +214,13 @@ class WordCountReportBuilder(ReportBuilder):
         self.word_counts = []
         self.header = "Word Count Report"
 
-    def build_table(self):
+    def build_html_table(self):
         """
         Return a table of data.
 
         This subclass adds a row for average word count.
         """
-        table = super().build_table()
+        table = super().build_html_table()
         table = self._remove_closing_table_tag(table)
         average_word_count = self._get_average(self.word_counts)
         average_word_count_row = self._build_reduce_row("average", "word count",
@@ -254,13 +270,13 @@ class PerformanceReportBuilder(ReportBuilder):
         self.header = "Performance Report"
         self.performance_counts = []
 
-    def build_table(self):
+    def build_html_table(self):
         """
         Return a table of data.
 
         This subclass adds a row for average word count.
         """
-        table = super().build_table()
+        table = super().build_html_table()
         # I can get an add_row method from the mixin that does the following.
         table = self._remove_closing_table_tag(table)
         total_time = self._get_sum(self.performance_counts)
