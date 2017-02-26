@@ -1,4 +1,46 @@
-class ReportBuilder:
+from abc import ABCMeta, abstractmethod
+
+class BaseReportBuilder(metaclass=ABCMeta):
+    """
+    Base class for report builders.
+    """
+
+    def __init__(self, data, categories):
+        self.data = data
+        self.categories = categories
+
+    @abstractmethod
+    def create_report(self):
+        pass
+
+    @abstractmethod
+    def build_report(self):
+        pass
+
+    @abstractmethod
+    def build_table(self):
+        pass
+
+
+# what changes:
+# categories, header, unique rows (linked to categories), report format (html, css etc)
+# what stays the same:
+# building and creating a report, building a table
+
+# make categories an input to __init__
+# make unique rows some sort of mixin. It needs to override build_table
+# For each row, I need the type of calculation and the category name.
+# I'll also need to have different implementations for different report formats.
+# Maybe specify format as well, or store format as a ReportBuilder attribute
+# and grab that, so it's not user specified.
+
+class NonStandardRowMixin:
+    """
+    Used to add a nonstandard row to a report.
+    """
+    pass
+
+class ReportBuilder(BaseReportBuilder):
     """
     Basic class for building an html report.
     """
@@ -11,12 +53,12 @@ class ReportBuilder:
         # The header value is used for generating a report title and header.
         self.header = "Report"
 
-    def create_report(self):
+    def create_report(self, file_format):
         """
         Create an html report.
         """
         report = self.build_report()
-        filename = self.header + ".html"
+        filename = "{0}.{1}".format(self.header, file_format)
         with open(filename, "w") as f:
             f.write(report)
 
@@ -219,6 +261,7 @@ class PerformanceReportBuilder(ReportBuilder):
         This subclass adds a row for average word count.
         """
         table = super().build_table()
+        # I can get an add_row method from the mixin that does the following.
         table = self._remove_closing_table_tag(table)
         total_time = self._get_sum(self.performance_counts)
         total_performance_row = self._build_reduce_row("total", "time",
@@ -242,6 +285,8 @@ class PerformanceReportBuilder(ReportBuilder):
                             <td>{0}</td>
                             """.format(category_value)
             site_row += category_html
+            # update list would also go into the mixin, and everything above
+            # is covered by a call to super().
             self._update_list(category, "time_to_complete",
                            self.performance_counts, category_value)
         return site_row

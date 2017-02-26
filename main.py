@@ -16,22 +16,32 @@ def gather_alexa_data(name, password):
     alexa_sites_data = s.build_sites_list(listings)
     return alexa_sites_data
 
-def build_reports(alexa_sites_data, builders):
+def build_reports(alexa_sites_data, builders, file_format):
     """
     Creates a new report from each of the passed report builders.
     """
     for Builder in builders:
         report_builder = Builder(alexa_sites_data)
-        report_builder.create_report()
+        report_builder.create_report(file_format)
 
-def main(name, password, builders):
+def main(name, password, builders, file_format):
     alexa_data = gather_alexa_data(name, password)
-    build_reports(alexa_data, builders)
+    build_reports(alexa_data, builders, file_format)
 
 if __name__ == "__main__":
-    import sys
-    name = sys.argv[1]
-    password = sys.argv[2]
+    # import sys
+    # name = sys.argv[1]
+    # password = sys.argv[2]
     builders = [WordCountReportBuilder, HeaderReportBuilder,\
                 PerformanceReportBuilder]
-    main(name, password, builders)
+    file_format = "html"
+
+    listings = ["google.com", "bing.com"]
+
+    s = SiteRetriever()
+    data = s.build_sites_list(listings)
+    for Builder in builders:
+        report_builder = Builder(data)
+        report_builder.create_report(file_format)
+
+    # main(name, password, builders, file_format)
