@@ -5,7 +5,7 @@ class BaseReportBuilder(metaclass=ABCMeta):
     Base class for report builders.
     """
 
-    def __init__(self, data, categories):
+    def __init__(self, header, categories, data):
         self.data = data
         self.categories = categories
 
@@ -40,14 +40,15 @@ class ReportBuilder(BaseReportBuilder):
     """
     Basic class for building an html report.
     """
-    def __init__(self, data):
+    def __init__(self, header, categories, data):
         """
         data: a list of dictionaries used to populate rows in the report.
         """
         self.data = data
-        self.categories = []
+        self.categories = categories
         # The header value is used for generating a report title and header.
-        self.header = "Report"
+        # self.header = "Report"
+        self.header = header
 
     def create_report(self, file_format):
         """
@@ -68,14 +69,9 @@ class ReportBuilder(BaseReportBuilder):
         This method delegates to a build method appropriate to the provided
         file_format.
         """
-
         if file_format == "html":
             report = self.build_html_report()
-
         return report
-
-
-
 
     def build_html_report(self):
         """
@@ -204,105 +200,105 @@ class ReportBuilder(BaseReportBuilder):
         return average_row
 
 
-class WordCountReportBuilder(ReportBuilder):
-    """
-    Used to build a Word Count report.
-    """
-    def __init__(self, data):
-        super().__init__(data)
-        self.categories = ["site_name", "word_count"]
-        self.word_counts = []
-        self.header = "Word Count Report"
-
-    def build_html_table(self):
-        """
-        Return a table of data.
-
-        This subclass adds a row for average word count.
-        """
-        table = super().build_html_table()
-        table = self._remove_closing_table_tag(table)
-        average_word_count = self._get_average(self.word_counts)
-        average_word_count_row = self._build_reduce_row("average", "word count",
-                                                         average_word_count)
-        table += average_word_count_row
-        table += "</table>"
-        return table
-
-    def _build_site_row(self, site_dict):
-        """
-        Return a row containing data for all of the predefined categories.
-        """
-        site_row = ""
-        for category in self.categories:
-            category_value = site_dict[category]
-
-            if isinstance(category_value, list):
-                category_value = ", ".join(sorted(category_value))
-
-            category_html = """
-                            <td>{0}</td>
-                            """.format(category_value)
-            site_row += category_html
-            self._update_list(category, "word_count",
-                           self.word_counts, category_value)
-        return site_row
-
-
-class HeaderReportBuilder(ReportBuilder):
-    """
-    Used to build a Header report.
-    """
-
-    def __init__(self, data):
-        super().__init__(data)
-        self.categories = ["site_name", "headers", "cookies"]
-        self.header = "Header Report"
-
-
-class PerformanceReportBuilder(ReportBuilder):
-    """
-    Used to build a Performance report.
-    """
-    def __init__(self, data):
-        super().__init__(data)
-        self.categories = ["site_name", "time_to_complete"]
-        self.header = "Performance Report"
-        self.performance_counts = []
-
-    def build_html_table(self):
-        """
-        Return a table of data.
-
-        This subclass adds a row for average word count.
-        """
-        table = super().build_html_table()
-        # I can get an add_row method from the mixin that does the following.
-        table = self._remove_closing_table_tag(table)
-        total_time = self._get_sum(self.performance_counts)
-        total_performance_row = self._build_reduce_row("total", "time",
-                                                       total_time)
-        table += total_performance_row
-        table += "</table>"
-        return table
-
-    def _build_site_row(self, site_dict):
-        """
-        Return a row containing data for all of the predefined categories.
-        """
-        site_row = ""
-        for category in self.categories:
-            category_value = site_dict[category]
-
-            if isinstance(category_value, list):
-                category_value = ", ".join(sorted(category_value))
-
-            category_html = """
-                            <td>{0}</td>
-                            """.format(category_value)
-            site_row += category_html
-            # update list would also go into the mixin, and everything above
-            # is covered by a call to super().
-            self._update_list(category, "time_to_complete",
-                           self.performance_counts, category_value)
-        return site_row
+# class WordCountReportBuilder(ReportBuilder):
+#     """
+#     Used to build a Word Count report.
+#     """
+#     def __init__(self, data):
+#         super().__init__(data)
+#         self.categories = ["site_name", "word_count"]
+#         self.word_counts = []
+#         self.header = "Word Count Report"
+#
+#     def build_html_table(self):
+#         """
+#         Return a table of data.
+#
+#         This subclass adds a row for average word count.
+#         """
+#         table = super().build_html_table()
+#         table = self._remove_closing_table_tag(table)
+#         average_word_count = self._get_average(self.word_counts)
+#         average_word_count_row = self._build_reduce_row("average", "word count",
+#                                                          average_word_count)
+#         table += average_word_count_row
+#         table += "</table>"
+#         return table
+#
+#     def _build_site_row(self, site_dict):
+#         """
+#         Return a row containing data for all of the predefined categories.
+#         """
+#         site_row = ""
+#         for category in self.categories:
+#             category_value = site_dict[category]
+#
+#             if isinstance(category_value, list):
+#                 category_value = ", ".join(sorted(category_value))
+#
+#             category_html = """
+#                             <td>{0}</td>
+#                             """.format(category_value)
+#             site_row += category_html
+#             self._update_list(category, "word_count",
+#                            self.word_counts, category_value)
+#         return site_row
+#
+#
+# class HeaderReportBuilder(ReportBuilder):
+#     """
+#     Used to build a Header report.
+#     """
+#
+#     def __init__(self, data):
+#         super().__init__(data)
+#         self.categories = ["site_name", "headers", "cookies"]
+#         self.header = "Header Report"
+#
+#
+# class PerformanceReportBuilder(ReportBuilder):
+#     """
+#     Used to build a Performance report.
+#     """
+#     def __init__(self, data):
+#         super().__init__(data)
+#         self.categories = ["site_name", "time_to_complete"]
+#         self.header = "Performance Report"
+#         self.performance_counts = []
+#
+#     def build_html_table(self):
+#         """
+#         Return a table of data.
+#
+#         This subclass adds a row for average word count.
+#         """
+#         table = super().build_html_table()
+#         # I can get an add_row method from the mixin that does the following.
+#         table = self._remove_closing_table_tag(table)
+#         total_time = self._get_sum(self.performance_counts)
+#         total_performance_row = self._build_reduce_row("total", "time",
+#                                                        total_time)
+#         table += total_performance_row
+#         table += "</table>"
+#         return table
+#
+#     def _build_site_row(self, site_dict):
+#         """
+#         Return a row containing data for all of the predefined categories.
+#         """
+#         site_row = ""
+#         for category in self.categories:
+#             category_value = site_dict[category]
+#
+#             if isinstance(category_value, list):
+#                 category_value = ", ".join(sorted(category_value))
+#
+#             category_html = """
+#                             <td>{0}</td>
+#                             """.format(category_value)
+#             site_row += category_html
+#             # update list would also go into the mixin, and everything above
+#             # is covered by a call to super().
+#             self._update_list(category, "time_to_complete",
+#                            self.performance_counts, category_value)
+#         return site_row
