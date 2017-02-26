@@ -1,7 +1,7 @@
 from siteretriever import ListingsRetriever, SiteRetriever
-# from reportbuilder import (WordCountReportBuilder, HeaderReportBuilder,
-#                            PerformanceReportBuilder)
-from reportbuilder import ReportBuilder
+from reportbuilder import (WordCountReportBuilder, HeaderReportBuilder,
+                           PerformanceReportBuilder, ReportBuilder,
+                           CustomRowReportBuilder)
 from timer import timethis
 
 def gather_alexa_data(name, password):
@@ -30,19 +30,11 @@ def main(name, password, builders, file_format):
     build_reports(alexa_data, builders, file_format)
 
 if __name__ == "__main__":
-    # import sys
-    # name = sys.argv[1]
-    # password = sys.argv[2]
-    # builders = [WordCountReportBuilder, HeaderReportBuilder,\
-    #             PerformanceReportBuilder]
+    import sys
+    name = sys.argv[1]
+    password = sys.argv[2]
+    builders = [WordCountReportBuilder, HeaderReportBuilder,\
+                PerformanceReportBuilder]
     file_format = "html"
 
-    listings = ["google.com", "bing.com"]
-
-    s = SiteRetriever()
-    data = s.build_sites_list(listings)
-    categories = ["site_name", "word_count"]
-    report_builder = ReportBuilder("some report", categories, data)
-    report_builder.create_report(file_format)
-
-    # main(name, password, builders, file_format)
+    main(name, password, builders, file_format)
