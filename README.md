@@ -43,7 +43,9 @@ Once it has finished, it will produce the three reports as html files in the sam
 
 ### Developer Instructions/Notes
 
-If you'd like to use the ReportBuilder for building your own reports, you should subclass it. HeaderReportBuilder is a good example of a standard report. WordCountReportBuilder and PerformanceReportBuilder are examples of the ways you might override the parent methods for custom data. I've included some methods in ReportBuilder to assist with this.
+If you'd like to use the ReportBuilder for building your own reports, you can instantiate it. To build reports that summarize or average the values of a field, instantiate CustomRowReportBuilder. See their docstrings, and the docstring of NonStandardRowMixin, for more information.
+
+HeaderReportBuilder is a good example of a standard report. WordCountReportBuilder and PerformanceReportBuilder are examples of nonstandard reports. These are only included for backwards compatibility. Subclassing shouldn't be necessary for the above use cases.
 
 SiteRetriever is an example of a way to retrieve data from a website and output it in a format that ReportBuilder will understand.
 
