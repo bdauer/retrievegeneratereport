@@ -39,7 +39,7 @@ Once it has finished, it will produce the three reports as html files in the sam
 * Generate a score based on the ratio of words to ranking.
 * Generate a score based on the ratio of ranking to performance.
 * Abstract the SiteRetriever and ListingsRetriever classes a bit, and create a base class for each of them to inherit from. This would allow a more consistent interface for generating data that a subclass of ReportBuilder could consume.
-* I might consider abstracting out the categories used for column creation, but in order for that to be an effective way to reduce the need for subclasses, I'd also need a way for the ReportBuilder to accept instructions for irregularly displayed data (e.g. a separate totaled or averaged value).
+* ~~I might consider abstracting out the categories used for column creation, but in order for that to be an effective way to reduce the need for subclasses, I'd also need a way for the ReportBuilder to accept instructions for irregularly displayed data (e.g. a separate totaled or averaged value).~~ Completed for v0.2!
 
 ### Developer Instructions/Notes
 
