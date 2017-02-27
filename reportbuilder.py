@@ -78,7 +78,8 @@ class NonStandardRowMixin:
                         <td><b>{0} {1}:</b></td>
                         <td><b>{2}</b></td>
                         </tr>""".format(method_applied,
-                                        category_name,
+                                        self._prettify_variable_name(
+                                                            category_name),
                                         reduced_value)
         return reduced_row
 
