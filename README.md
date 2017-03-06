@@ -1,3 +1,5 @@
+Reimplementing the siteretriever in AWS at [this repo](https://github.com/bdauer/siteretriever).
+
 ### Description
 This program collects the names of the top 100 sites on Alexa.
 
