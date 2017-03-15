@@ -106,7 +106,8 @@ class SiteRetriever:
     """
     Class for retrieving data from a list of sites.
     """
-    def build_sites_list(self, listings):
+    @staticmethod
+    def build_sites_list(listings):
         """
         Return a list of site dictionaries.
 
@@ -133,9 +134,9 @@ class SiteRetriever:
         # I can access the list of dicts from the db to pass to the reportbuilder.
         # reportbuilder shouldn't be responsible for the retrieval.
 
-
     @timethis
-    def _build_site_dictionary(self, page, site):
+    @staticmethod
+    def _build_site_dictionary(page, site):
         """
         Return a site dictionary.
 
@@ -149,7 +150,8 @@ class SiteRetriever:
             "cookies": cookies,
             "word_count": word_count}
 
-    def _get_data_from(self, page):
+    @staticmethod
+    def _get_data_from(page):
         """
         Return all of the data retrieved from page.
 
@@ -160,7 +162,8 @@ class SiteRetriever:
         word_count = self._get_wordcount(page)
         return (headers, cookies, word_count)
 
-    def _get_page(self, site):
+    @staticmethod
+    def _get_page(site):
         """
         Return a response object from the site.
 
@@ -174,8 +177,8 @@ class SiteRetriever:
             page = requests.get(url)
         return page
 
-
-    def _get_wordcount(self, page):
+    @staticmethod
+    def _get_wordcount(page):
         """
         Return the number of words on a page.
 
