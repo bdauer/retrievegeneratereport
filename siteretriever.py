@@ -106,37 +106,38 @@ class SiteRetriever:
     """
     Class for retrieving data from a list of sites.
     """
-    @staticmethod
-    def build_sites_list(listings):
+
+    def __init__(self):
+        self.sites_list = []
+
+    def build_sites_list(self, listings):
         """
         Return a list of site dictionaries.
 
         listings: a list of websites without their protocols.
         """
+        if self.sites_list != []:
+            return self.sites_list
+
         print("Collecting sites data...")
-        sites_list = []
         for site in listings:
             print("Collecting {0}'s data...".format(site))
-            # need event invocation lambda to run here.
-            # This means moving the logic between this and 'the next comment'
-            # into its an event lambda to call asynchronously.
-            # and instead of returning a sites list, I should store the list of dicts in a dynamoDB.
+
             try:
                 page = self._get_page(site)
-                sites_list.append(self._build_site_dictionary(page, site))
+                self.sites_list.append(self._build_site_dictionary(page, site))
             except requests.exceptions.ConnectionError:
                 print("{0} could not be accessed".format(site))
                 continue
             ##### the next comment
 
         print("Sites data collected.")
-        return sites_list
+        return self.sites_list
         # I can access the list of dicts from the db to pass to the reportbuilder.
         # reportbuilder shouldn't be responsible for the retrieval.
 
     @timethis
-    @staticmethod
-    def _build_site_dictionary(page, site):
+    def _build_site_dictionary(self, page, site):
         """
         Return a site dictionary.
 
@@ -150,8 +151,7 @@ class SiteRetriever:
             "cookies": cookies,
             "word_count": word_count}
 
-    @staticmethod
-    def _get_data_from(page):
+    def _get_data_from(self, page):
         """
         Return all of the data retrieved from page.
 
