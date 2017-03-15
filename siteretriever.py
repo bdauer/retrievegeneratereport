@@ -17,19 +17,24 @@ class ListingsRetriever:
     BASE_URL = "http://www.alexa.com/topsites/global;"
     LOGIN_URL = "http://www.alexa.com/secure/login/ajaxex"
 
-    def __init__(self, email, password, num_sites=100):
+    def __init__(self, email=None, password=None, num_sites=100):
         self.email = email
         self.password = password
         self.num_sites = num_sites
         self.num_pages = self._get_number_of_amazon_pages(num_sites)
+        self.top_sites = None
 
     def get_listings(self):
         """
         Return a list of the top Alexa sites.
         """
         print("Retrieving top sites from Alexa...")
+        if self.listings is not None:
+            return listings
+
         soupy_listings = self._get_soupy_listings()
         top_sites = self._scrub_listings(soupy_listings)
+        self.listings = top_sites
         print("Top sites retrieved...")
         return top_sites
 
@@ -111,15 +116,23 @@ class SiteRetriever:
         sites_list = []
         for site in listings:
             print("Collecting {0}'s data...".format(site))
+            # need event invocation lambda to run here.
+            # This means moving the logic between this and 'the next comment'
+            # into its an event lambda to call asynchronously.
+            # and instead of returning a sites list, I should store the list of dicts in a dynamoDB.
             try:
                 page = self._get_page(site)
                 sites_list.append(self._build_site_dictionary(page, site))
             except requests.exceptions.ConnectionError:
                 print("{0} could not be accessed".format(site))
                 continue
+            ##### the next comment
 
         print("Sites data collected.")
         return sites_list
+        # I can access the list of dicts from the db to pass to the reportbuilder.
+        # reportbuilder shouldn't be responsible for the retrieval.
+
 
     @timethis
     def _build_site_dictionary(self, page, site):
