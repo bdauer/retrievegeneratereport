@@ -22,7 +22,7 @@ class ListingsRetriever:
         self.password = password
         self.num_sites = num_sites
         self.num_pages = self._get_number_of_amazon_pages(num_sites)
-        self.top_sites = None
+        self.listings = None
 
     def get_listings(self):
         """
@@ -33,10 +33,10 @@ class ListingsRetriever:
             return self.listings
 
         soupy_listings = self._get_soupy_listings()
-        top_sites = self._scrub_listings(soupy_listings)
-        self.listings = top_sites
+        listings = self._scrub_listings(soupy_listings)
+        self.listings = listings
         print("Top sites retrieved...")
-        return top_sites
+        return listings
 
     def _get_number_of_amazon_pages(self, num_sites):
         """
