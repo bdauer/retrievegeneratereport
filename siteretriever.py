@@ -30,7 +30,7 @@ class ListingsRetriever:
         """
         print("Retrieving top sites from Alexa...")
         if self.listings is not None:
-            return listings
+            return self.listings
 
         soupy_listings = self._get_soupy_listings()
         top_sites = self._scrub_listings(soupy_listings)
