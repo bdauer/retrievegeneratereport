@@ -1,3 +1,17 @@
+#### Update notes for v0.21
+
+* Began work on an apiretriever. Currently it posts a list of sites from Alexa to an API. I'd like to get it retrieving data as well.
+* Updated SiteRetriever and ListingsRetriever to cache the results of a search. This way one instance can be called multiple times without repeating the search.
+
+#### Update notes for v0.2
+Still need to improve the documentation, update tests and make a pass to tidy up variable names. Major changes are as follows:
+* New abstract base class: BaseReportBuilder
+* New mixin: NonStandardRowMixin. Use for appending a field that averages or sums a column.
+* Improved extensibility: report format is provided as an argument. Currently only supports html reports.
+* Backwards Compatibility! The boilerplate builder classes now implement the new functionality, reducing the need for a complete rewrite of code that depended on the old builders.
+
+
+
 Reimplementing the siteretriever in AWS at [this repo](https://github.com/bdauer/siteretriever).
 
 ### Description
@@ -52,10 +66,3 @@ HeaderReportBuilder is a good example of a standard report. WordCountReportBuild
 SiteRetriever is an example of a way to retrieve data from a website and output it in a format that ReportBuilder will understand.
 
 timer.py has a useful wrapper for timing tasks. It's almost exactly what the Python Cookbook suggests, but I modified it to add the value to the dictionary returned by the method. Note: this will only work if the method returns a dictionary.
-
-#### Update notes for v0.2
-Still need to improve the documentation, update tests and make a pass to tidy up variable names. Major changes are as follows:
-* New abstract base class: BaseReportBuilder
-* New mixin: NonStandardRowMixin. Use for appending a field that averages or sums a column.
-* Improved extensibility: report format is provided as an argument. Currently only supports html reports.
-* Backwards Compatibility! The boilerplate builder classes now implement the new functionality, reducing the need for a complete rewrite of code that depended on the old builders.
